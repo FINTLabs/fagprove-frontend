@@ -4,39 +4,56 @@ import {
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
+  ScrollRestoration, useNavigate,
 } from "react-router";
+import "@navikt/ds-css/dist/index.css";
+import "../../fagprove-frontend/app/novari-theme.css";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
+import {Box, Page} from "@navikt/ds-react";
+import {NovariFooter, NovariHeader} from "novari-frontend-components";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
   return (
     <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
+    <head>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <Meta />
+      <Links />
+    </head>
+    <body data-theme="novari">
+    <Page
+      footer={
+        <Box as="footer" background={"surface-alt-3-moderate"}>
+          <Page.Block gutters width="lg">
+            <NovariFooter links={[]} />
+          </Page.Block>
+        </Box>
+      }
+    >
+      <Box
+        as="header"
+        className={"pt-2 pb-2 pl-2 pr-2"}
+        background={"bg-default"}
+      >
+        <NovariHeader
+          appName={"FINT Adapter Kontrakter"}
+          menu={[["Home", "/"], ["Kontrakter", "/kontrakter"]]}
+          isLoggedIn={true}
+          displayName={"John Doe"}
+          onMenuClick={ (action )=> navigate(action)}
+        />
+      </Box>
+      <Page.Block as="main" gutters width="lg">
         {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
+      </Page.Block>
+    </Page>
+    <ScrollRestoration />
+    <Scripts />
+    </body>
     </html>
   );
 }

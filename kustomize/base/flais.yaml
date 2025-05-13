@@ -1,0 +1,31 @@
+apiVersion: fintlabs.no/v1alpha1
+kind: Application
+metadata:
+  name: fagprove-frontend
+  namespace: fint-core
+  labels:
+    app.kubernetes.io/name: fagprove-frontend
+    app.kubernetes.io/instance: fagprove-frontend_fintlabs_no
+    app.kubernetes.io/version: latest
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: fint-core
+    fintlabs.no/team: core
+    fintlabs.no/org-id: fintlabs.no
+spec:
+  port: 8000
+  orgId: fintlabs.no
+  image: ghcr.io/fintlabs/fagprove-frontend:latest
+  env:
+    - name: PUBLIC_API_URL
+      value: http://fagprove-backend:8080
+  ingress:
+    routes:
+      - host: fagprove.fintlabs.no
+        path: /
+  resources:
+    limits:
+      memory: "1024Mi"
+      cpu: "700m"
+    requests:
+      memory: "128Mi"
+      cpu: "100m"

@@ -1,0 +1,37 @@
+[data-theme='novari'] {
+
+    --a-bg-default: #FEFCFA;
+    --a-bg-subtle:#FCF5ED;
+
+    --a-surface-action: var(--a-surface-alt-3-strong);
+    --a-surface-action-hover: #5149CA;
+    --a-surface-action-active: var(--a-surface-alt-3-strong);
+    --a-surface-action-selected: var(--a-surface-alt-3-strong);
+    --a-surface-action-subtle-hover: var(--a-surface-alt-3-subtle);
+    --a-surface-action-selected-hover: #5149CA;
+    --a-surface-default: var(--a-bg-default);
+    --a-surface-hover: #E5E4FA;
+
+    --a-text-action-selected: var(--a-surface-alt-3-strong);
+    --a-text-on-action: #ffffff;
+    --a-text-action: var(--a-surface-alt-3-strong);
+    --a-text-action-hover: var(--a-surface-alt-3-strong);
+    --a-text-action-on-action-subtle: var(--a-surface-alt-3-strong);
+
+    --a-border-action: var(--a-surface-alt-3-strong);
+    --a-border-action-hover: var(--a-surface-alt-3-strong);
+    --a-border-action-selected: var(--a-surface-alt-3-strong);
+    --a-border-focus: var(--a-surface-alt-3-strong);
+
+    --a-surface-alt-3-strong: #5A51E1;
+    --a-surface-alt-3-subtle: #E5E4FA;
+    --a-surface-alt-3-moderate: #6B133D;
+
+    .novari-header {
+        background:  #FCF5ED;
+    }
+
+    .novari-footer {
+        background: #6B133D;
+    }
+}
