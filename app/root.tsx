@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration, useNavigate,
+  useLoaderData
 } from "react-router";
 import "@navikt/ds-css/dist/index.css";
 import "app/novari-theme.css";
@@ -16,7 +17,7 @@ import {NovariFooter, NovariHeader} from "novari-frontend-components";
 
 export const loader: LoaderFunction = async ({request}) => {
   const username = request.headers.get("x-fullname") || "brukernavn";
-  return json({username});
+  return {username};
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
