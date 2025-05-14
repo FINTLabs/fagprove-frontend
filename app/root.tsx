@@ -14,7 +14,13 @@ import "./app.css";
 import {Box, Page} from "@navikt/ds-react";
 import {NovariFooter, NovariHeader} from "novari-frontend-components";
 
+export const loader: LoaderFunction = async ({request}) => {
+  const username = request.headers.get("x-fullname") || "brukernavn";
+  return json({username});
+};
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const {username} = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   return (
     <html lang="en">
@@ -43,7 +49,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           appName={"FINT Adapter Kontrakter"}
           menu={[["Home", "/"], ["Kontrakter", "/kontrakter"]]}
           isLoggedIn={true}
-          displayName={"John Doe"}
+          displayName={username}
           onMenuClick={ (action )=> navigate(action)}
         />
       </Box>
