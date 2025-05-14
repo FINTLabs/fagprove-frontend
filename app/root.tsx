@@ -1,10 +1,12 @@
 import {
+  json,
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration, useNavigate,
+  ScrollRestoration,
+  useNavigate
 } from "react-router";
 import "@navikt/ds-css/dist/index.css";
 import "app/novari-theme.css";
