@@ -8,7 +8,7 @@ const API_URL = process.env.API_URL;
 
 export const loader = async () => {
   const api = new NovariApiManager({
-    baseUrl: '${API_URL}'
+    baseUrl: API_URL || "not-set"
   })
 
   const response = await api.call({
