@@ -7,7 +7,7 @@ import {
   ScrollRestoration, useNavigate,
 } from "react-router";
 import "@navikt/ds-css/dist/index.css";
-import "../../fagprove-frontend/app/novari-theme.css";
+import "app/novari-theme.css";
 
 import type { Route } from "./+types/root";
 import "./app.css";
