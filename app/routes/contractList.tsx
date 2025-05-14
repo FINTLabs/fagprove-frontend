@@ -1,13 +1,14 @@
-import { NovariApiManager } from "novari-frontend-components"
+import {NovariApiManager} from "novari-frontend-components"
 import type {IContract, IContractModal} from "~/types/IContract";
 import {type ActionFunction, data, useFetcher, useLoaderData} from "react-router";
 import {Button, Modal, Table, Heading, Pagination} from "@navikt/ds-react";
 import React, {useEffect, useRef, useState} from "react";
 
+const API_URL = process.env.API_URL;
 
 export const loader = async () => {
   const api = new NovariApiManager({
-    baseUrl: 'http://localhost:51579',
+    baseUrl: '${API_URL}'
   })
 
   const response = await api.call({
@@ -21,7 +22,7 @@ export const loader = async () => {
 }
 
 const ContractList = () => {
-  const { contracts } = useLoaderData<{ contracts: IContract[]; variant: string }>();
+  const {contracts} = useLoaderData<{ contracts: IContract[]; variant: string }>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [modal, setModal] = useState<IContractModal>({
     open: false,

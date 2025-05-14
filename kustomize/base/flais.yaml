@@ -16,7 +16,7 @@ spec:
   orgId: fintlabs.no
   image: ghcr.io/fintlabs/fagprove-frontend:latest
   env:
-    - name: PUBLIC_API_URL
+    - name: API_URL
       value: http://fagprove-backend:8080
   ingress:
     routes:
