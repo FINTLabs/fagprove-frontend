@@ -12,10 +12,11 @@ import {
 } from "@navikt/ds-react";
 import React, { useMemo, useState } from "react";
 
+const API_URL = process.env.API_URL;
 
 export const loader = async () => {
   const api = new NovariApiManager({
-    baseUrl: "http://localhost:63023",
+    baseUrl: API_URL || "not-set"
   });
 
   const response = await api.call({
@@ -27,7 +28,7 @@ export const loader = async () => {
   return { contracts: response.data as IContract[] };
 };
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 15;
 
 const ContractList: React.FC = () => {
   const { contracts } = useLoaderData<{ contracts: IContract[] }>();
@@ -60,7 +61,7 @@ const ContractList: React.FC = () => {
   }, [currentPage, filteredBySearch]);
 
   return (
-    <VStack gap="4" className="w-full" justify={"center"} minHeight={"1000"}>
+    <>
       <form role="search" className="flex-1" onSubmit={(e) => e.preventDefault()}>
         <Search
           label="Søk i kontrakter"
@@ -74,6 +75,7 @@ const ContractList: React.FC = () => {
           autoComplete="off"
         />
       </form>
+    <VStack gap="4" className="w-full" justify={"space-between"} minHeight={"70vh"} align={"center"}>
       <Modal
         open={modal.open}
         onClose={() => setModal({ open: false, contract: null })}
@@ -123,9 +125,10 @@ const ContractList: React.FC = () => {
         onPageChange={setCurrentPage}
         count={Math.ceil(filteredBySearch.length / PAGE_SIZE)}
         size="small"
-        //className="p-3"
+        className="p-3"
       />
     </VStack>
+    </>
   )};
 
 export default ContractList;
