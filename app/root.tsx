@@ -47,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         background={"bg-default"}
       >
         <NovariHeader
-          appName={"FINT Adapter Kontrakter"}
+          appName={"FINT Adapter Register"}
           menu={[["Home", "/"]]}
           isLoggedIn={true}
           displayName={username}
