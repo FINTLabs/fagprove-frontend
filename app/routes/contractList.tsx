@@ -12,11 +12,10 @@ import {
 } from "@navikt/ds-react";
 import React, { useMemo, useState } from "react";
 
-const API_URL = process.env.API_URL;
 
 export const loader = async () => {
   const api = new NovariApiManager({
-    baseUrl: API_URL || "not-set",
+    baseUrl: "http://localhost:63023",
   });
 
   const response = await api.call({
@@ -61,7 +60,7 @@ const ContractList: React.FC = () => {
   }, [currentPage, filteredBySearch]);
 
   return (
-    <HStack gap="4" className="w-full">
+    <VStack gap="4" className="w-full" justify={"center"} minHeight={"1000"}>
       <form role="search" className="flex-1" onSubmit={(e) => e.preventDefault()}>
         <Search
           label="Søk i kontrakter"
@@ -124,10 +123,9 @@ const ContractList: React.FC = () => {
         onPageChange={setCurrentPage}
         count={Math.ceil(filteredBySearch.length / PAGE_SIZE)}
         size="small"
-        className="p-3"
+        //className="p-3"
       />
-    </HStack>
-  );
-};
+    </VStack>
+  )};
 
 export default ContractList;
