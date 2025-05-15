@@ -1,100 +1,133 @@
-import {NovariApiManager} from "novari-frontend-components"
-import type {IContract, IContractModal} from "~/types/IContract";
-import {type ActionFunction, data, useFetcher, useLoaderData} from "react-router";
-import {Button, Modal, Table, Heading, Pagination} from "@navikt/ds-react";
-import React, {useEffect, useRef, useState} from "react";
+import { NovariApiManager } from "novari-frontend-components";
+import type { IContract, IContractModal } from "~/types/IContract";
+import { useLoaderData } from "react-router";
+import {
+  Modal,
+  Table,
+  Heading,
+  Pagination,
+  Search,
+  HStack,
+  VStack,
+} from "@navikt/ds-react";
+import React, { useMemo, useState } from "react";
 
 const API_URL = process.env.API_URL;
 
 export const loader = async () => {
   const api = new NovariApiManager({
-    baseUrl: API_URL || "not-set"
-  })
-
-  const response = await api.call({
-    method: 'GET',
-    endpoint: '/contract',
-    functionName: 'getAllContracts'
+    baseUrl: API_URL || "not-set",
   });
 
-  return {contracts: response.data, variant: response.variant, success: response.success};
+  const response = await api.call({
+    method: "GET",
+    endpoint: "/contract",
+    functionName: "getAllContracts",
+  });
 
-}
+  return { contracts: response.data as IContract[] };
+};
 
-const ContractList = () => {
-  const {contracts} = useLoaderData<{ contracts: IContract[]; variant: string }>();
-  const [currentPage, setCurrentPage] = useState<number>(1);
+const PAGE_SIZE = 20;
+
+const ContractList: React.FC = () => {
+  const { contracts } = useLoaderData<{ contracts: IContract[] }>();
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
   const [modal, setModal] = useState<IContractModal>({
     open: false,
     contract: null,
   });
 
-  const pageContracts = contracts.slice(
-    (currentPage - 1) * 20,
-    currentPage * 20
-  );
+  const filteredBySearch = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return contracts;
 
+    return contracts.filter((contract) =>
+      [
+        contract.adapterId,
+        contract.userName,
+        contract.orgId?.toString(),
+      ]
+        .filter(Boolean)
+        .some((field) => field!.toLowerCase().includes(query))
+    );
+  }, [searchQuery, contracts]);
+
+  const pageContracts = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredBySearch.slice(start, start + PAGE_SIZE);
+  }, [currentPage, filteredBySearch]);
 
   return (
-    <div>
+    <HStack gap="4" className="w-full">
+      <form role="search" className="flex-1" onSubmit={(e) => e.preventDefault()}>
+        <Search
+          label="Søk i kontrakter"
+          variant="secondary"
+          value={searchQuery}
+          onChange={(value: string) => {
+            setSearchQuery(value);
+            setCurrentPage(1);
+          }}
+          placeholder="Søk på adapterId, brukernavn eller orgId"
+          autoComplete="off"
+        />
+      </form>
       <Modal
         open={modal.open}
-        onClose={() => setModal({open: false, contract: null})}
-        aria-labelledby="modal-heading"
+        onClose={() => setModal({ open: false, contract: null })}
+        aria-labelledby="contract-modal-heading"
         closeOnBackdropClick
       >
         <Modal.Header>
-          <Heading level="1" size="small" id="modal-heading">
-            {modal.contract?.adapterId}
+          <Heading level="1" size="small" id="contract-modal-heading">
+            {modal.contract?.adapterId.replaceAll("&", "/") ?? "Detaljer"}
           </Heading>
         </Modal.Header>
         <Modal.Body>
           <pre className="max-w-full max-h-96 overflow-auto text-sm">
-            {JSON.stringify(modal.contract, null, 2)}
+            {modal.contract && JSON.stringify(modal.contract, null, 2).replaceAll("&", "/")}
           </pre>
         </Modal.Body>
-        <Modal.Footer>
-          {modal.contract?.adapterId}
-        </Modal.Footer>
       </Modal>
 
-      <Table style={{tableLayout: "fixed"}} size="small">
+      <Table size="small" style={{ tableLayout: "fixed" }}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell scope="col">AdapterId</Table.HeaderCell>
             <Table.HeaderCell scope="col">Username</Table.HeaderCell>
-            <Table.HeaderCell scope="col">orgId</Table.HeaderCell>
+            <Table.HeaderCell scope="col">OrgId</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {pageContracts.map((contract: IContract, i: number) => {
-            return (
-              <Table.Row key={i}
-                         onClick={() => setModal({open: true, contract})}
-              >
-                <Table.DataCell
-                  className="max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap">
-                  {contract.adapterId.replaceAll("&", "/")}
-                </Table.DataCell>
-                <Table.DataCell
-                  className="max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap">
-                  {contract.userName}
-                </Table.DataCell>
-                <Table.DataCell>{contract.orgId}</Table.DataCell>
-              </Table.Row>
-            );
-          })}
+          {pageContracts.map((contract) => (
+            <Table.Row
+              key={contract.adapterId}
+              onClick={() => setModal({ open: true, contract })}
+            >
+              <Table.DataCell className="max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap">
+                {contract.adapterId.replaceAll("&", "/")}
+              </Table.DataCell>
+              <Table.DataCell className="max-w-[400px] overflow-hidden text-ellipsis whitespace-nowrap">
+                {contract.userName}
+              </Table.DataCell>
+              <Table.DataCell>{contract.orgId}</Table.DataCell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
+
       <Pagination
         page={currentPage}
-        onPageChange={(page: number) => setCurrentPage(page)}
-        count={Math.ceil(contracts.length / 20)}
+        onPageChange={setCurrentPage}
+        count={Math.ceil(filteredBySearch.length / PAGE_SIZE)}
         size="small"
-        className={"p-3"}
+        className="p-3"
       />
-    </div>
-  )
-}
+    </HStack>
+  );
+};
 
 export default ContractList;
