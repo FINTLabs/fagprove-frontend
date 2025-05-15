@@ -48,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <NovariHeader
           appName={"FINT Adapter Kontrakter"}
-          menu={[["Home", "/"], ["Kontrakter", "/kontrakter"]]}
+          menu={[["Home", "/"]]}
           isLoggedIn={true}
           displayName={username}
           onMenuClick={ (action )=> navigate(action)}
