@@ -71,8 +71,7 @@ const ContractList: React.FC = () => {
             setSearchQuery(value);
             setCurrentPage(1);
           }}
-          placeholder="Søk på adapterId, brukernavn eller orgId"
-          autoComplete="off"
+          placeholder="Søk på adapterId, brukernavn eller organisasjon"
         />
       </form>
     <VStack gap="4" className="w-full" justify={"space-between"} minHeight={"70vh"} align={"center"}>
@@ -83,7 +82,7 @@ const ContractList: React.FC = () => {
         closeOnBackdropClick
       >
         <Modal.Header>
-          <Heading level="1" size="small" id="contract-modal-heading">
+          <Heading size="small">
             {modal.contract?.adapterId.replaceAll("&", "/") ?? "Detaljer"}
           </Heading>
         </Modal.Header>
@@ -99,7 +98,7 @@ const ContractList: React.FC = () => {
           <Table.Row>
             <Table.HeaderCell scope="col">AdapterId</Table.HeaderCell>
             <Table.HeaderCell scope="col">Username</Table.HeaderCell>
-            <Table.HeaderCell scope="col">OrgId</Table.HeaderCell>
+            <Table.HeaderCell scope="col">Organisasjon</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
